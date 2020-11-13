@@ -1,0 +1,12 @@
+.icon-right {
+    display: inline-block;
+    vertical-align: middle;
+    position: relative;
+    width: 20px;
+    height: 18px;
+    background-image: url("../../images/right.svg");
+}
+
+.icon-right-disabled {
+    background-image: url("../../images/rightDisabled.svg") !important;
+}

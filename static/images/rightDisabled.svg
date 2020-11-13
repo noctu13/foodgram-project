@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   id="svg10"
+   version="1.1"
+   fill="none"
+   viewBox="0 0 16 16"
+   height="16"
+   width="16">
+  <metadata
+     id="metadata14">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <rect
+     y="7.9663941e-16"
+     style="fill:url(#pattern16);fill-opacity:0.5"
+     id="rect2"
+     transform="matrix(0,1,1,0,0,0)"
+     height="16"
+     width="16"
+     x="-4.8780094e-32" />
+  <defs
+     id="defs8">
+    <pattern
+       patternTransform="translate(-16)"
+       id="pattern16"
+       xlink:href="#pattern0" />
+    <pattern
+       height="1"
+       width="1"
+       patternContentUnits="objectBoundingBox"
+       id="pattern0">
+      <use
+         id="use4"
+         transform="scale(0.0166667)"
+         xlink:href="#image0" />
+    </pattern>
+    <image
+       xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADwAAAA8CAYAAAA6/NlyAAAABmJLR0QA/wD/AP+gvaeTAAAA8ElEQVRoge3YywrCMBRF0e0fqigO9OsVQfHxAwo6qAekpKI2Ng/Pgk5v7iajFMzMzMzMzMzM/tEcOAJbYJx4l5AJsAPOwKLvsBFwAG6P7xJjaEQLmp2034lm5172TwNzim7H3mh27W0aGJw6OhR7odk1ilnggCuwinXAB+YduyxjH5RD9GCxkjJ68FhJEZ0sVoaMTh4rQ0RnEyu/jM4uVn4RnW2sxIzOPlZiRBcTK32ii4uVb6KLjZVPoouPlXeiq4mVV9HVxUrX2zW3N3ZUoZuu7mbbuqKrjJV2dNWxMgY2wJo8f/uamZmZmZmZmRXmDg8/7S7HihANAAAAAElFTkSuQmCC"
+       height="60"
+       width="60"
+       id="image0" />
+  </defs>
+</svg>
