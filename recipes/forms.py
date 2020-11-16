@@ -1,17 +1,22 @@
-from .models import Recipe
-from django.forms import ModelForm
+from django import forms
 from django.utils.translation import gettext_lazy as _
 
+from .models import Recipe, Tag
 
-class RecipeForm(ModelForm):
+
+class RecipeForm(forms.ModelForm):
+    tags = forms.ModelMultipleChoiceField(
+        queryset=Tag.objects.all(),
+        widget=forms.CheckboxSelectMultiple(),
+        required=True
+    )
+
     class Meta:
         model = Recipe
-        fields = ['name', 'text', "image", "ingredients", "tags", "time"]
+        fields = ['name', 'text', "image", "time"]
         labels = {
             'name': _('Название'),
             'text': _('Текст'),
             'image': _('Картинка'),
-            'ingredients': _('Ингредиенты'),
-            'tags': _('Метки'),
             'time': _('Время готовки'),
         }

@@ -1,26 +1,26 @@
 from django.db import models
-from django.utils.translation import gettext_lazy as _
 from django.contrib.auth import get_user_model
 
 User = get_user_model()
 
 
-class Ingredient(models.Model):
-    name = models.CharField(max_length=200)
-    quantity = models.PositiveIntegerField()
-    measure = models.CharField(max_length=20)
+class Tag(models.Model):
+    name = models.CharField(max_length=20, unique=True)
+    color = models.CharField(max_length=20)
 
     def __str__(self):
         return self.name
 
 
+class Ingredient(models.Model):
+    title = models.CharField(max_length=200)
+    dimension = models.CharField(max_length=20)
+
+    def __str__(self):
+        return self.title
+
+
 class Recipe(models.Model):
-
-    class Meal(models.TextChoices):
-        BREAKFAST = 'B', _('Breakfast')
-        LUNCH = 'L', _('Lunch')
-        DINNER = 'D', _('Dinner')
-
     name = models.CharField(max_length=200)
     author = models.ForeignKey(
         User,
@@ -29,15 +29,12 @@ class Recipe(models.Model):
     )
     text = models.TextField()
     image = models.ImageField(upload_to='recipes/', blank=True, null=True)
-    ingredients = models.ForeignKey(
+    ingredients = models.ManyToManyField(
         Ingredient,
-        on_delete=models.PROTECT,
         related_name='recipes',
+        through='Composition'
     )
-    tags = models.CharField(
-        max_length=1,
-        choices=Meal.choices,
-    )
+    tags = models.ManyToManyField(Tag)
     time = models.PositiveIntegerField()
     pub_date = models.DateTimeField(
         'date published',
@@ -47,6 +44,26 @@ class Recipe(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class Composition(models.Model):
+    recipe = models.ForeignKey(
+        Recipe,
+        on_delete=models.CASCADE,
+        related_name='compositions'
+    )
+    ingredient = models.ForeignKey(
+        Ingredient,
+        on_delete=models.PROTECT,
+        related_name='compositions'
+    )
+    quantity = models.PositiveIntegerField()
+
+    class Meta:
+        unique_together = ['recipe', 'ingredient']
+
+    def __str__(self):
+        return "{} contain {}".format(self.recipe.name, self.ingredient.title)
 
 
 class Follow(models.Model):

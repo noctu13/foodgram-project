@@ -1,8 +1,8 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.core.paginator import Paginator
 from django.contrib.auth.decorators import login_required
-from django.http import Http404
-from .models import Recipe, User, Follow  # , Favor
+from django.http import Http404, JsonResponse
+from .models import Recipe, User, Composition, Ingredient, Follow  # , Favor
 from .forms import RecipeForm
 
 
@@ -26,13 +26,32 @@ def index(request):
     )
 
 
+def ingredients(request):
+    return JsonResponse(list(Ingredient.objects.all().values()), safe=False)
+
+
 @login_required
-def new_recipe(request):
+def recipe_add(request):
     form = RecipeForm(request.POST or None, files=request.FILES or None)
+    print(dict(request.POST.items()))
     if request.method == 'POST' and form.is_valid():
         recipe = form.save(commit=False)
         recipe.author = request.user
+        post_data = dict(request.POST.items())
+        for key in post_data:
+            try:
+                prefix, idx = key.split('_')
+            except (ValueError):
+                idx = None
+            if prefix == 'nameIngredient':
+                ingredient = Ingredient.objects.get(title=post_data[key])
+                quantity = post_data['unitsIngredient_'+idx]
+                composition = Composition.objects.create(
+                    recipe, ingredient, quantity
+                )
+                recipe.ingredients.add(composition)
         recipe.save()
+        form.save_m2m()
         return redirect('index')
     return render(request, "formRecipe.html", {"form": form})
 
