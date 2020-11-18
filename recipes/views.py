@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.core.paginator import Paginator
 from django.contrib.auth.decorators import login_required
 from django.http import Http404, JsonResponse
-from .models import Recipe, User, Composition, Ingredient, Follow  # , Favor
+from .models import Recipe, User, Tag, Composition, Ingredient, Follow  # , Favor
 from .forms import RecipeForm
 
 
@@ -33,27 +33,59 @@ def ingredients(request):
 @login_required
 def recipe_add(request):
     form = RecipeForm(request.POST or None, files=request.FILES or None)
-    print(dict(request.POST.items()))
     if request.method == 'POST' and form.is_valid():
+        post_data = dict(request.POST.items())
         recipe = form.save(commit=False)
         recipe.author = request.user
-        post_data = dict(request.POST.items())
-        for key in post_data:
-            try:
-                prefix, idx = key.split('_')
-            except (ValueError):
-                idx = None
-            if prefix == 'nameIngredient':
-                ingredient = Ingredient.objects.get(title=post_data[key])
-                quantity = post_data['unitsIngredient_'+idx]
-                composition = Composition.objects.create(
-                    recipe, ingredient, quantity
-                )
-                recipe.ingredients.add(composition)
         recipe.save()
         form.save_m2m()
+        for key in filter(
+            lambda x: x.startswith('nameIngredient'), post_data
+        ):
+            item_id = key.split('_')[1]
+            ingredient = Ingredient.objects.get(title=post_data[key])
+            quantity = post_data['valueIngredient_' + item_id]
+            Composition.objects.create(
+                recipe=recipe, ingredient=ingredient, quantity=quantity
+            )
         return redirect('index')
     return render(request, "formRecipe.html", {"form": form})
+
+
+@login_required
+def recipe_edit(request, recipe_id):
+    recipe = get_object_or_404(Recipe, pk=recipe_id)
+    if request.user != recipe.author:
+        return redirect('recipe', recipe_id=recipe_id)
+    ingredients = recipe.ingredients.all()
+    form = RecipeForm(
+        request.POST or None,
+        files=request.FILES or None,
+        instance=recipe
+    )
+    if request.method == 'POST' and form.is_valid():
+        form.save()
+        return redirect('recipe', recipe_id=recipe_id)
+    return render(
+        request,
+        "formRecipe.html",
+        {"form": form, "ingredients": ingredients}
+    )
+
+
+def recipe_view(request, recipe_id):
+    recipe = get_object_or_404(Recipe, pk=recipe_id)
+    ingredients = recipe.ingredients.all()
+    form = RecipeForm(
+        request.POST or None,
+        files=request.FILES or None,
+        instance=recipe
+    )
+    return render(
+        request,
+        "formRecipeView.html",
+        {"form": form, "ingredients": ingredients}
+    )
 
 
 def profile_view(request, username):
@@ -75,40 +107,6 @@ def profile_view(request, username):
             'paginator': paginator
         }
     )
-
-
-def recipe_view(request, username, recipe_id):
-    author = get_object_or_404(User, username=username)
-    recipe = get_object_or_404(Recipe, pk=recipe_id)
-    if author != recipe.author:
-        raise Http404()
-    form = RecipeForm(request.POST or None)
-    return render(
-        request,
-        "formRecipe.html",
-        {
-            "author": author,
-            "form": form,
-            "recipe": recipe
-        }
-    )
-
-
-@login_required
-def recipe_edit(request, username, recipe_id):
-    author = get_object_or_404(User, username=username)
-    if request.user != author:
-        return redirect('recipe', username=username, recipe_id=recipe_id)
-    recipe = get_object_or_404(Recipe, pk=recipe_id)
-    form = RecipeForm(
-        request.POST or None,
-        files=request.FILES or None,
-        instance=recipe
-    )
-    if request.method == 'POST' and form.is_valid():
-        form.save()
-        return redirect('recipe', username=username, recipe_id=recipe_id)
-    return render(request, "formRecipe.html", {"form": form, "recipe": recipe})
 
 
 # @login_required

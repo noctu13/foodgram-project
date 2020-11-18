@@ -7,15 +7,15 @@ from .models import Recipe, Tag
 class RecipeForm(forms.ModelForm):
     tags = forms.ModelMultipleChoiceField(
         queryset=Tag.objects.all(),
-        widget=forms.CheckboxSelectMultiple(),
         required=True
     )
 
     class Meta:
         model = Recipe
-        fields = ['name', 'text', "image", "time"]
+        fields = ['name', 'tags', 'text', "image", "time"]
         labels = {
             'name': _('Название'),
+            'tags': _("Теги"),
             'text': _('Текст'),
             'image': _('Картинка'),
             'time': _('Время готовки'),
