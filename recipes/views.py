@@ -35,24 +35,27 @@ def ingredients(request):
     return JsonResponse(list(Ingredient.objects.all().values()), safe=False)
 
 
+def post_ingredient_save(recipe, post_data):
+    for key in filter(
+        lambda x: x.startswith('nameIngredient'), post_data
+    ):
+        item_id = key.split('_')[1]
+        ingredient = Ingredient.objects.get(title=post_data[key])
+        quantity = post_data['valueIngredient_' + item_id]
+        Composition.objects.create(
+            recipe=recipe, ingredient=ingredient, quantity=quantity
+        )
+
+
 @login_required
 def recipe_add(request):
     form = RecipeForm(request.POST or None, files=request.FILES or None)
     if request.method == 'POST' and form.is_valid():
-        post_data = dict(request.POST.items())
         recipe = form.save(commit=False)
         recipe.author = request.user
         recipe.save()
         form.save_m2m()
-        for key in filter(
-            lambda x: x.startswith('nameIngredient'), post_data
-        ):
-            item_id = key.split('_')[1]
-            ingredient = Ingredient.objects.get(title=post_data[key])
-            quantity = post_data['valueIngredient_' + item_id]
-            Composition.objects.create(
-                recipe=recipe, ingredient=ingredient, quantity=quantity
-            )
+        post_ingredient_save(recipe, dict(request.POST.items()))
         return redirect('index')
     return render(request, "recipeForm.html", {"form": form})
 
@@ -62,7 +65,6 @@ def recipe_edit(request, recipe_id):
     recipe = get_object_or_404(Recipe, pk=recipe_id)
     if request.user != recipe.author:
         return redirect('recipe', recipe_id=recipe_id)
-    ingredients = recipe.ingredients.all()
     form = RecipeForm(
         request.POST or None,
         files=request.FILES or None,
@@ -70,11 +72,13 @@ def recipe_edit(request, recipe_id):
     )
     if request.method == 'POST' and form.is_valid():
         form.save()
+        recipe.ingredients.clear()
+        post_ingredient_save(recipe, dict(request.POST.items()))
         return redirect('recipe', recipe_id=recipe_id)
     return render(
         request,
         "recipeForm.html",
-        {"form": form, "ingredients": ingredients}
+        {"form": form}
     )
 
 

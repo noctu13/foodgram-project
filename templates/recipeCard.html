@@ -1,12 +1,12 @@
 <div class="card">
     {% if recipe.image %}
-        <a href="{% url 'recipe' recipe.pk %}" class="link" target="_blank"><img src="{{ recipe.image.url }}" alt="Какой-то текст" class="card__image"></a>
+        <a href="{% url 'recipe' recipe.pk %}" class="link"><img src="{{ recipe.image.url }}" alt="Какой-то текст" class="card__image"></a>
     {% else %}
         {% load static %}
-        <a href="{% url 'recipe' recipe.pk %}" class="link" target="_blank"><img src="{% static 'images/testCardImg.png' %}" alt="Какой-то текст" class="card__image"></a>
+        <a href="{% url 'recipe' recipe.pk %}" class="link"><img src="{% static 'images/testCardImg.png' %}" alt="Какой-то текст" class="card__image"></a>
     {% endif %}
     <div class="card__body">
-        <a class="card__title link" href="#" target="_blank">{{ recipe.name }}</a>
+        <a class="card__title link" href="{% url 'recipe' recipe.pk %}">{{ recipe.name }}</a>
         <ul class="card__items">
             {% for choice in tags %}
                 {% if choice in recipe.tags.all %}

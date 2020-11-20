@@ -48,7 +48,15 @@
                         <label for="cantidad" class="form__label" id="cantidadVal">шт.</label>
                     </div>
                     <div class="form__field-group-ingredientes-container">
-
+                        {% for item in form.instance.compositions.all %}
+                            <div class="form__field-item-ingredient" id="ing_{{ forloop.counter }}">
+                                <span>{{ item.ingredient }} {{ item.quantity }}{{ item.ingredient.dimension }}</span>
+                                <span class="form__field-item-delete"></span>
+                                <input id="nameIngredient_{{ forloop.counter }}" name="nameIngredient_{{ forloop.counter }}" type="hidden" value="{{ item.ingredient }}">
+                                <input id="valueIngredient_{{ forloop.counter }}" name="valueIngredient_{{ forloop.counter }}" type="hidden" value="{{ item.quantity }}">
+                                <input id="unitsIngredient_{{ forloop.counter }}" name="unitsIngredient_{{ forloop.counter }}" type="hidden" value="{{ item.ingredient.dimension }}">
+                            </div>
+                        {% endfor %}
                     </div>
                     <span class="form__ingredient-link" id="addIng">Добавить ингредиент</span>
                     <span class="form__error"></span>
