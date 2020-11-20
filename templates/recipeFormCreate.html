@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+{% block title %}Создание рецепта{% endblock %}
+{% load static %}
+{% block css %}{% static 'pages/form.css' %}{% endblock %}
+{% block content %}
+    {% include "recipeFormBase.html" with title="Создание рецепта" button="Создать рецепт"%}
+{% endblock %}

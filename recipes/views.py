@@ -32,7 +32,12 @@ def index(request):
 
 
 def ingredients(request):
-    return JsonResponse(list(Ingredient.objects.all().values()), safe=False)
+    return JsonResponse(
+        list(Ingredient.objects.filter(
+            title__startswith=request.GET['query']).values()
+        ),
+        safe=False
+    )
 
 
 def post_ingredient_save(recipe, post_data):
@@ -57,7 +62,7 @@ def recipe_add(request):
         form.save_m2m()
         post_ingredient_save(recipe, dict(request.POST.items()))
         return redirect('index')
-    return render(request, "recipeForm.html", {"form": form})
+    return render(request, "recipeFormCreate.html", {"form": form})
 
 
 @login_required
@@ -77,7 +82,7 @@ def recipe_edit(request, recipe_id):
         return redirect('recipe', recipe_id=recipe_id)
     return render(
         request,
-        "recipeForm.html",
+        "recipeFormEdit.html",
         {"form": form}
     )
 
