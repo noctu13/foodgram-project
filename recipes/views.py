@@ -19,10 +19,15 @@ class PageBack:
 def index(request):
     recipe_list = Recipe.objects.all().order_by("-pub_date")
     page_back = PageBack(request, recipe_list)
+    tags = Tag.objects.all()
     return render(
         request,
         'index.html',
-        {'page': page_back.page, 'paginator': page_back.paginator}
+        {
+            'page': page_back.page,
+            'paginator': page_back.paginator,
+            "tags": tags
+        }
     )
 
 
@@ -49,7 +54,7 @@ def recipe_add(request):
                 recipe=recipe, ingredient=ingredient, quantity=quantity
             )
         return redirect('index')
-    return render(request, "formRecipe.html", {"form": form})
+    return render(request, "recipeForm.html", {"form": form})
 
 
 @login_required
@@ -68,23 +73,18 @@ def recipe_edit(request, recipe_id):
         return redirect('recipe', recipe_id=recipe_id)
     return render(
         request,
-        "formRecipe.html",
+        "recipeForm.html",
         {"form": form, "ingredients": ingredients}
     )
 
 
 def recipe_view(request, recipe_id):
     recipe = get_object_or_404(Recipe, pk=recipe_id)
-    ingredients = recipe.ingredients.all()
-    form = RecipeForm(
-        request.POST or None,
-        files=request.FILES or None,
-        instance=recipe
-    )
+    tags = Tag.objects.all()
     return render(
         request,
-        "formRecipeView.html",
-        {"form": form, "ingredients": ingredients}
+        "recipeView.html",
+        {"recipe": recipe, "tags": tags}
     )
 
 

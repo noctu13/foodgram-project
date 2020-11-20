@@ -1,22 +1,16 @@
-<div class="card" data-id="120">
+<div class="card">
     {% if recipe.image %}
-        <a href="#" class="link" target="_blank"><img src="{{ recipe.image.url }}" alt="Какой-то текст" class="card__image"></a>
+        <a href="{% url 'recipe' recipe.pk %}" class="link" target="_blank"><img src="{{ recipe.image.url }}" alt="Какой-то текст" class="card__image"></a>
     {% else %}
         {% load static %}
-        <a href="#" class="link" target="_blank"><img src="{% static 'images/testCardImg.png' %}" alt="Какой-то текст" class="card__image"></a>
+        <a href="{% url 'recipe' recipe.pk %}" class="link" target="_blank"><img src="{% static 'images/testCardImg.png' %}" alt="Какой-то текст" class="card__image"></a>
     {% endif %}
     <div class="card__body">
         <a class="card__title link" href="#" target="_blank">{{ recipe.name }}</a>
         <ul class="card__items">
-            {% for tag in recipe.tags.all %}
-                {% if tag.name == 'Breakfast' %}
-                    <li class="card__item"><span class="badge badge_style_orange">Завтрак</span></li>
-                {% endif %}
-                {% if tag.name == 'Lunch' %}
-                    <li class="card__item"><span class="badge badge_style_green">Обед</span></li>
-                {% endif %}
-                {% if tag.name == 'Dinner' %}
-                    <li class="card__item"><span class="badge badge_style_purple">Ужин</span></li>
+            {% for choice in tags %}
+                {% if choice in recipe.tags.all %}
+                    <li class="card__item"><span class="badge badge_style_{{ choice.color }}">{{ choice }}</span></li>
                 {% endif %}
             {% endfor %}
         </ul>
