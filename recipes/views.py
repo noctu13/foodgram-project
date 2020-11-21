@@ -23,7 +23,6 @@ def index(request):
     query = Tag.objects.filter(name__in=get_data).order_by('pk') if get_data else tags
     recipe_list = Recipe.objects.filter(tags__in=query).order_by("-pub_date")
     page_back = PageBack(request, recipe_list)
-    print(query,get_data)
     return render(
         request,
         'index.html',

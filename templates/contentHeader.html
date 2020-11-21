@@ -7,9 +7,7 @@
                 <a class="tags__checkbox tags__checkbox_style_{{ item.color }}
                     {% if item in query %}tags__checkbox_active{% endif %}"
                     {% if item in query %}
-                        {% with next_item=tags|next:forloop.counter0 %}
-                        href="{{ request.get_path }}?{% for choice in query %}{% if choice != item %}tag={{ choice }}{% if not forloop.last %}&{% endif %}{% endif %}{% endfor %}"
-                        {% endwith %}
+                            href="{{ request.get_path }}{{query|tag_query:item}}"
                     {% else %}
                         href="{{ request.get_full_path }}&tag={{ item }}"
                     {% endif %}

@@ -9,12 +9,13 @@ def addclass(field, css):
 
 
 @register.filter
-def next(lst, index):
+def tag_query(query, item):
     """
-    Returns the next element of the list using the current index if it exists.
-    Otherwise returns an empty string.
+    Returns href query for Tags items
+    Depends on Tag model
     """
-    try:
-        return lst[int(index) + 1]
-    except IndexError:
-        return ''
+    href = '?'
+    for choice in query:
+        if choice != item:
+            href += 'tag=' + choice.name + '&'
+    return href[:-1]
