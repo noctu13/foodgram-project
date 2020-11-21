@@ -14,7 +14,7 @@ def tag_query(query, item):
     Returns href query for Tags items
     Depends on Tag model
     """
-    href = '?'
+    href = '?' if item else '&'
     for choice in query:
         if choice != item:
             href += 'tag=' + str(choice) + '&'

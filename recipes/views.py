@@ -10,7 +10,7 @@ from .forms import RecipeForm
 class PageBack:
     def __init__(self, request, _list):
         if _list:
-            self.paginator = Paginator(_list, 9)
+            self.paginator = Paginator(_list, 6)
             self.page = self.paginator.get_page(request.GET.get('page'))
         else:
             self.paginator = None
@@ -21,7 +21,7 @@ def index(request):
     tags = Tag.objects.all().order_by('pk')
     get_data = request.GET.getlist('tag')
     query = Tag.objects.filter(name__in=get_data).order_by('pk') if get_data else tags
-    recipe_list = Recipe.objects.filter(tags__in=query).order_by("-pub_date")
+    recipe_list = Recipe.objects.filter(tags__in=query).distinct().order_by("-pub_date")
     page_back = PageBack(request, recipe_list)
     return render(
         request,

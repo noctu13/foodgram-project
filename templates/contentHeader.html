@@ -7,9 +7,9 @@
                 <a class="tags__checkbox tags__checkbox_style_{{ item.color }}
                     {% if item in query %}tags__checkbox_active{% endif %}"
                     {% if item in query %}
-                            href="{{ request.path }}{{query|tag_query:item}}"
+                            href="{{ request.path }}{{ query|tag_query:item }}"
                     {% else %}
-                        href="{{ request.get_full_path }}&tag={{ item }}"
+                        href="{{ request.path }}{{ query|tag_query:item }}&tag={{ item }}"
                     {% endif %}
                 >
                 </a>
