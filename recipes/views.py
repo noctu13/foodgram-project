@@ -1,7 +1,8 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.core.paginator import Paginator
 from django.contrib.auth.decorators import login_required
-from django.http import Http404, JsonResponse
+from django.http import JsonResponse
+
 from .models import Recipe, User, Tag, Composition, Ingredient, Follow  # , Favor
 from .forms import RecipeForm
 
@@ -17,16 +18,20 @@ class PageBack:
 
 
 def index(request):
-    recipe_list = Recipe.objects.all().order_by("-pub_date")
+    tags = Tag.objects.all().order_by('pk')
+    get_data = request.GET.getlist('tag')
+    query = Tag.objects.filter(name__in=get_data).order_by('pk') if get_data else tags
+    recipe_list = Recipe.objects.filter(tags__in=query).order_by("-pub_date")
     page_back = PageBack(request, recipe_list)
-    tags = Tag.objects.all()
+    print(query,get_data)
     return render(
         request,
         'index.html',
         {
             'page': page_back.page,
             'paginator': page_back.paginator,
-            "tags": tags
+            "tags": tags,
+            "query": query,
         }
     )
 
@@ -34,7 +39,7 @@ def index(request):
 def ingredients(request):
     return JsonResponse(
         list(Ingredient.objects.filter(
-            title__startswith=request.GET['query']).values()
+            title__startswith=request.GET.get('query')).values()
         ),
         safe=False
     )
