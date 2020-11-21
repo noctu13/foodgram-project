@@ -17,5 +17,5 @@ def tag_query(query, item):
     href = '?'
     for choice in query:
         if choice != item:
-            href += 'tag=' + choice.name + '&'
+            href += 'tag=' + str(choice) + '&'
     return href[:-1]

@@ -1,4 +1,4 @@
-{% load user_filters %}
+{% load custom_filters %}
 <div class="main__header">
     <h1 class="main__title">{{ title }}</h1>
     <ul class="tags">
@@ -7,7 +7,7 @@
                 <a class="tags__checkbox tags__checkbox_style_{{ item.color }}
                     {% if item in query %}tags__checkbox_active{% endif %}"
                     {% if item in query %}
-                            href="{{ request.get_path }}{{query|tag_query:item}}"
+                            href="{{ request.path }}{{query|tag_query:item}}"
                     {% else %}
                         href="{{ request.get_full_path }}&tag={{ item }}"
                     {% endif %}
