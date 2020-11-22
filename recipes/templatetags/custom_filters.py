@@ -19,3 +19,9 @@ def tag_query(query, item):
         if choice != item:
             href += 'tag=' + str(choice) + '&'
     return href[:-1]
+
+
+@register.filter
+def sub(value, arg):
+    """Subtract the arg from the value."""
+    return value - int(arg)

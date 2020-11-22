@@ -1,0 +1,34 @@
+{% load custom_filters %}
+<div class="card-user" data-author="{{ author.pk }}">
+    <div class="card-user__header">
+        <h2 class="card-user__title"><a href="{% url 'profile' author.username %}" style="text-decoration:none; color: black">{{ author }}</a></h2>
+    </div>
+    <div class="card-user__body">
+        <ul class="card-user__items">
+            {% for recipe in author.recipes.all|slice:":3" %}
+                <li class="card-user__item">
+                    <div class="recipe">
+                        {% if recipe.image %}
+                            <img src="{{ recipe.image.url }}" alt="dish foto" class="recipe__image">
+                        {% else %}
+                            {% load static %}
+                            <img src="{% static 'images/testCardImg.png' %}" alt="default foto" class="recipe__image">
+                        {% endif %}
+                        <h3 class="recipe__title"><a href="{% url 'recipe' recipe.pk %}" style="text-decoration:none; color: black">{{ recipe }}</a></h3>
+                        <p class="recipe__text"><span class="icon-time"></span> {{ recipe.time }} мин.</p>
+                    </div>
+                </li>
+            {% endfor %}
+            {% if author.recipes.all.count > 3 %}
+                <li class="card-user__item">
+                    <a href="{% url 'profile' author.username %}" class="card-user__link link">Еще {{ author.recipes.all.count|sub:"3" }} рецептов...</a>
+                </li>
+            {% endif %}
+        </ul>
+    </div>
+    <div class="card-user__footer">
+        <form action="">
+            <button type="submit" class="button button_style_light-blue button_size_auto" name="subscribe">Отписаться</button>
+        </form>
+    </div>
+</div>

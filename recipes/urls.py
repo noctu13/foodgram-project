@@ -5,6 +5,8 @@ urlpatterns = [
     path("", views.index, name="index"),
 
     path("ingredients/", views.ingredients),
+    path("subscriptions/", views.subscription, name="subscription"),
+
     path("recipes/add/", views.recipe_add, name="recipe_add"),
     path("recipes/<int:recipe_id>/", views.recipe_view, name="recipe"),
     path(
@@ -12,6 +14,9 @@ urlpatterns = [
         views.recipe_edit,
         name="recipe_edit"
     ),
+    path("users/<username>/", views.profile_view, name="profile"),
+    path("follow/", views.follow_index, name="follow_index"),
+
     # path("favorites/", views.favor_index, name="favor_index"),
     # path(
     #     "recipes/<int:recipe_id>/favor/",
@@ -35,14 +40,6 @@ urlpatterns = [
     #     name="cart_remove_recipe"
     # ),
 
-    path("users/<username>/", views.profile_view, name="profile"),
-    # path("follow/", views.follow_index, name="follow_index"),
-    # path("<username>/follow/", views.profile_follow, name="profile_follow"),
-    # path(
-    #     "<username>/unfollow/",
-    #     views.profile_unfollow,
-    #     name="profile_unfollow"
-    # ),
     path("about/", views.about, name="about"),
     path("spec/", views.spec, name="spec"),
 ]
