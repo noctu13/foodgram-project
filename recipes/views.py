@@ -161,10 +161,18 @@ def recipe_view(request, recipe_id):
         user=request.user,
         author=recipe.author
     ).exists() if request.user.is_authenticated else None
+    favor = Recipe.objects.filter(
+        favorites__user=request.user
+    ) if request.user.is_authenticated else None
     return render(
         request,
         'recipeView.html',
-        {'recipe': recipe, 'tags': tags, 'follow': follow}
+        {
+            'recipe': recipe,
+            'tags': tags,
+            'follow': follow,
+            'favor': favor
+        }
     )
 
 
@@ -178,6 +186,9 @@ def profile_view(request, username):
         user=request.user,
         author=author
     ).exists() if request.user.is_authenticated else None
+    favor = Recipe.objects.filter(
+        favorites__user=request.user
+    ) if request.user.is_authenticated else None
     recipe_list = author.recipes.filter(
         tags__in=query).distinct().order_by('-pub_date')
     page_back = PageBack(request, recipe_list)
@@ -190,7 +201,8 @@ def profile_view(request, username):
             'tags': tags,
             'author': author,
             'query': query,
-            'follow': follow
+            'follow': follow,
+            'favor': favor
         }
     )
 
