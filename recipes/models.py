@@ -102,3 +102,24 @@ class Favor(models.Model):
 
     def __str__(self):
         return "{} favor {}".format(self.user.username, self.recipe.name)
+
+
+class Cart(models.Model):
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='carts'
+    )
+    recipe = models.ForeignKey(
+        Recipe,
+        on_delete=models.CASCADE,
+        related_name='carts'
+    )
+
+    class Meta:
+        unique_together = ['user', 'recipe']
+
+    def __str__(self):
+        return "{} add to cart {}".format(
+            self.user.username, self.recipe.name
+        )

@@ -7,6 +7,7 @@ urlpatterns = [
     path("api/ingredients/", views.api_ingredients),
     path("api/subscriptions/", views.api_subscription),
     path("api/favorites/", views.api_favorites),
+    path("api/cart/", views.cart),
 
     path("recipes/add/", views.recipe_add, name="recipe_add"),
     path("recipes/<int:recipe_id>/", views.recipe_view, name="recipe"),
@@ -18,18 +19,7 @@ urlpatterns = [
     path("users/<username>/", views.profile_view, name="profile"),
     path("subscriptions/", views.subscriptions, name="subscriptions"),
     path("favorites/", views.favorites, name="favorites"),
-
-    # path("cart/", views.cart_index, name="cart_index"),
-    # path(
-    #     "cart/add_recipe/<int:recipe_id>/",
-    #     views.cart_add_recipe,
-    #     name="cart_add_recipe"
-    # ),
-    # path(
-    #     "cart/remove_recipe/<int:recipe_id>/",
-    #     views.cart_remove_recipe,
-    #     name="cart_remove_recipe"
-    # ),
+    path("purchases/", views.purchases, name="purchases"),
 
     path("about/", views.about, name="about"),
     path("spec/", views.spec, name="spec"),

@@ -7,7 +7,7 @@ from django.views.decorators.http import require_http_methods
 import json
 
 from .models import (
-    Recipe, User, Tag, Composition, Ingredient, Follow, Favor
+    Recipe, User, Tag, Composition, Ingredient, Follow, Favor, Cart
 )
 from .forms import RecipeForm
 
@@ -32,6 +32,9 @@ def index(request):
     favor = Recipe.objects.filter(
         favorites__user=request.user
     ) if request.user.is_authenticated else None
+    cart = Recipe.objects.filter(
+        carts__user=request.user
+    ) if request.user.is_authenticated else None
     page_back = PageBack(request, recipe_list)
     return render(
         request,
@@ -41,7 +44,8 @@ def index(request):
             'paginator': page_back.paginator,
             'tags': tags,
             'query': query,
-            'favor': favor
+            'favor': favor,
+            'cart': cart
         }
     )
 
@@ -107,6 +111,20 @@ def api_favorites(request):
     return JsonResponse({'success': True})
 
 
+@login_required
+@require_http_methods(['POST', 'DELETE'])
+@csrf_protect
+def cart(request):
+    data = json.loads(request.body)
+    recipe = get_object_or_404(Recipe, pk=data.get('id'))
+    if request.method == 'POST':
+        Cart.objects.create(user=request.user, recipe=recipe)
+    else:
+        cart_item = get_object_or_404(Cart, user=request.user, recipe=recipe)
+        cart_item.delete()
+    return JsonResponse({'success': True})
+
+
 def post_ingredient_save(recipe, post_data):
     for key in filter(
         lambda x: x.startswith('nameIngredient'), post_data
@@ -164,6 +182,9 @@ def recipe_view(request, recipe_id):
     favor = Recipe.objects.filter(
         favorites__user=request.user
     ) if request.user.is_authenticated else None
+    cart = Recipe.objects.filter(
+        carts__user=request.user
+    ) if request.user.is_authenticated else None
     return render(
         request,
         'recipeView.html',
@@ -171,7 +192,8 @@ def recipe_view(request, recipe_id):
             'recipe': recipe,
             'tags': tags,
             'follow': follow,
-            'favor': favor
+            'favor': favor,
+            'cart': cart
         }
     )
 
@@ -189,6 +211,9 @@ def profile_view(request, username):
     favor = Recipe.objects.filter(
         favorites__user=request.user
     ) if request.user.is_authenticated else None
+    cart = Recipe.objects.filter(
+        carts__user=request.user
+    ) if request.user.is_authenticated else None
     recipe_list = author.recipes.filter(
         tags__in=query).distinct().order_by('-pub_date')
     page_back = PageBack(request, recipe_list)
@@ -202,7 +227,8 @@ def profile_view(request, username):
             'author': author,
             'query': query,
             'follow': follow,
-            'favor': favor
+            'favor': favor,
+            'cart': cart
         }
     )
 
@@ -219,6 +245,12 @@ def subscriptions(request):
             'paginator': page_back.paginator
         }
     )
+
+
+@login_required
+def purchases(request):
+    cart = Recipe.objects.filter(carts__user=request.user)
+    return render(request, 'purchases.html', {'cart': cart})
 
 
 def page_not_found(request, exception):
