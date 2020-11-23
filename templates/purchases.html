@@ -23,7 +23,7 @@
             </li>
         {% endfor %}
         </ul>
-        <a href="#"><button class="button button_style_blue">Скачать список</button></a>
+        <a href="{% url 'get_cart_text' %}"><button class="button button_style_blue">Скачать список</button></a>
     </div>
     <script src="{% static 'js/config/config.js' %}"></script>
     <script src="{% static 'js/components/Header.js' %}"></script>

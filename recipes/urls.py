@@ -20,6 +20,7 @@ urlpatterns = [
     path("subscriptions/", views.subscriptions, name="subscriptions"),
     path("favorites/", views.favorites, name="favorites"),
     path("purchases/", views.purchases, name="purchases"),
+    path("purchases/text/", views.get_cart_text, name="get_cart_text"),
 
     path("about/", views.about, name="about"),
     path("spec/", views.spec, name="spec"),

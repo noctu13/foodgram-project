@@ -1,9 +1,10 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.core.paginator import Paginator
 from django.contrib.auth.decorators import login_required
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_protect
 from django.views.decorators.http import require_http_methods
+from django.db.models import Sum
 import json
 
 from .models import (
@@ -251,6 +252,21 @@ def subscriptions(request):
 def purchases(request):
     cart = Recipe.objects.filter(carts__user=request.user)
     return render(request, 'purchases.html', {'cart': cart})
+
+
+@login_required
+def get_cart_text(request):
+    filename = 'cart.txt'
+    content = ''
+    cart = Recipe.objects.filter(carts__user=request.user)
+    compositions = Composition.objects.filter(
+        recipe__in=cart).values('ingredient').annotate(value=Sum('quantity'))
+    for item in compositions:
+        ingredient = Ingredient.objects.get(pk=item['ingredient'])
+        content += str(ingredient) + ', ' + str(item['value']) + '\n'
+    response = HttpResponse(content, content_type='text/plain')
+    response['Content-Disposition'] = 'attachment; filename=' + filename
+    return response
 
 
 def page_not_found(request, exception):
