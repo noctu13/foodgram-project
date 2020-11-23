@@ -1,5 +1,7 @@
 from django.contrib import admin
-from .models import Tag, Recipe, Ingredient, Composition, Follow, Favor
+from .models import (
+    Tag, Recipe, Ingredient, Composition, Follow, Favor, Cart
+)
 
 
 class CompositionInline(admin.TabularInline):
@@ -48,4 +50,11 @@ class FollowAdmin(admin.ModelAdmin):
 class FavorAdmin(admin.ModelAdmin):
     list_display = ("user", "recipe")
     search_fields = ("user",)
+    empty_value_display = '-пусто-'
+
+
+@admin.register(Cart)
+class CartAdmin(admin.ModelAdmin):
+    list_display = ("user", "recipe")
+    search_fields = ("user", "recipe")
     empty_value_display = '-пусто-'

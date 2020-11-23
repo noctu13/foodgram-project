@@ -173,6 +173,15 @@ def recipe_edit(request, recipe_id):
     )
 
 
+@login_required
+def recipe_delete(request, recipe_id):
+    recipe = get_object_or_404(Recipe, pk=recipe_id)
+    if request.user != recipe.author:
+        return redirect('recipe', recipe_id=recipe_id)
+    recipe.delete()
+    return redirect('index')
+
+
 def recipe_view(request, recipe_id):
     recipe = get_object_or_404(Recipe, pk=recipe_id)
     tags = Tag.objects.all()

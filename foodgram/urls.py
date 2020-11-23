@@ -16,8 +16,13 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import include, path
 from django.conf import settings
+from django.conf.urls import handler403, handler404, handler500
 from django.conf.urls.static import static
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+
+handler404 = "recipes.views.page_not_found"
+handler403 = "recipes.views.permission_denied"
+handler500 = "recipes.views.server_error"
 
 urlpatterns = [
     path('admin/', admin.site.urls),

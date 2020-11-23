@@ -16,6 +16,11 @@ urlpatterns = [
         views.recipe_edit,
         name="recipe_edit"
     ),
+    path(
+        "recipes/<int:recipe_id>/delete/",
+        views.recipe_delete,
+        name="recipe_delete"
+    ),
     path("users/<username>/", views.profile_view, name="profile"),
     path("subscriptions/", views.subscriptions, name="subscriptions"),
     path("favorites/", views.favorites, name="favorites"),
@@ -24,9 +29,7 @@ urlpatterns = [
 
     path("about/", views.about, name="about"),
     path("spec/", views.spec, name="spec"),
-]
 
-error_patterns = [
     path(
         "404/",
         views.page_not_found,
