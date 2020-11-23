@@ -5,11 +5,12 @@
                 {% url 'index' as index_url %}
                 <li class="nav__item {% if request.path == index_url %}nav__item_active{% endif %}"><a href="{{ index_url }}" class="nav__link link">Рецепты</a></li>
                 {% if user.is_authenticated %}
-                {% url 'follow_index' as follow_url %}
+                {% url 'subscriptions' as follow_url %}
                 <li class="nav__item {% if request.path == follow_url %}nav__item_active{% endif %}"><a href="{{ follow_url }}" class="nav__link link">Мои подписки</a></li>
                 {% url 'recipe_add' as recipe_add_url %}
                 <li class="nav__item {% if request.path == recipe_add_url %}nav__item_active{% endif %}"><a href="{{ recipe_add_url }}" class="nav__link link">Создать рецепт</a></li>
-                <li class="nav__item"><a href="#" class="nav__link link">Избранное</a></li>
+                {% url 'favorites' as favor_url %}
+                <li class="nav__item {% if request.path == favor_url %}nav__item_active{% endif %}""><a href="{{ favor_url }}" class="nav__link link">Избранное</a></li>
                 {% endif %}
                 <li class="nav__item"><a href="#" class="nav__link link">Список покупок</a> <span class="badge badge_style_blue nav__badge" id="counter"></span></li>
             </ul>

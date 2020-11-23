@@ -29,6 +29,9 @@ def index(request):
         name__in=get_data) if get_data else tags
     recipe_list = Recipe.objects.filter(
         tags__in=query).distinct().order_by('-pub_date')
+    favor = Recipe.objects.filter(
+        favorites__user=request.user
+    ) if request.user.is_authenticated else None
     page_back = PageBack(request, recipe_list)
     return render(
         request,
@@ -38,11 +41,36 @@ def index(request):
             'paginator': page_back.paginator,
             'tags': tags,
             'query': query,
+            'favor': favor
         }
     )
 
 
-def ingredients(request):
+@login_required
+def favorites(request):
+    tags = Tag.objects.all()
+    get_data = request.GET.getlist('tag')
+    query = Tag.objects.filter(
+        name__in=get_data) if get_data else tags
+    recipe_list = Recipe.objects.filter(
+        favorites__user=request.user).filter(
+        tags__in=query).distinct().order_by('-pub_date')
+    favor = recipe_list
+    page_back = PageBack(request, recipe_list)
+    return render(
+        request,
+        'index.html',
+        {
+            'page': page_back.page,
+            'paginator': page_back.paginator,
+            'tags': tags,
+            'query': query,
+            'favor': favor
+        }
+    )
+
+
+def api_ingredients(request):
     return JsonResponse(
         list(Ingredient.objects.filter(
             title__startswith=request.GET.get('query')).values()
@@ -54,7 +82,7 @@ def ingredients(request):
 @login_required
 @require_http_methods(['POST', 'DELETE'])
 @csrf_protect
-def subscription(request):
+def api_subscription(request):
     data = json.loads(request.body)
     author = get_object_or_404(User, pk=data.get('id'))
     if request.method == 'POST':
@@ -62,6 +90,20 @@ def subscription(request):
     else:
         follow = get_object_or_404(Follow, user=request.user, author=author)
         follow.delete()
+    return JsonResponse({'success': True})
+
+
+@login_required
+@require_http_methods(['POST', 'DELETE'])
+@csrf_protect
+def api_favorites(request):
+    data = json.loads(request.body)
+    recipe = get_object_or_404(Recipe, pk=data.get('id'))
+    if request.method == 'POST':
+        Favor.objects.create(user=request.user, recipe=recipe)
+    else:
+        favor = get_object_or_404(Favor, user=request.user, recipe=recipe)
+        favor.delete()
     return JsonResponse({'success': True})
 
 
@@ -154,12 +196,12 @@ def profile_view(request, username):
 
 
 @login_required
-def follow_index(request):
+def subscriptions(request):
     author_list = User.objects.filter(following__user=request.user)
     page_back = PageBack(request, author_list)
     return render(
         request,
-        'follow.html',
+        'subscriptions.html',
         {
             'page': page_back.page,
             'paginator': page_back.paginator
