@@ -5,7 +5,7 @@ User = get_user_model()
 
 
 class Tag(models.Model):
-    name = models.CharField(max_length=20, unique=True)
+    name = models.CharField(max_length=30, unique=True)
     color = models.CharField(max_length=20)
 
     def __str__(self):
@@ -17,7 +17,7 @@ class Tag(models.Model):
 
 
 class Ingredient(models.Model):
-    title = models.CharField(max_length=20)
+    title = models.CharField(max_length=80)
     dimension = models.CharField(max_length=20)
 
     def __str__(self):
