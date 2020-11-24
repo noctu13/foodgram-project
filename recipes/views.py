@@ -1,14 +1,11 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.core.paginator import Paginator
 from django.contrib.auth.decorators import login_required
-from django.http import JsonResponse, HttpResponse
-from django.views.decorators.csrf import csrf_protect
-from django.views.decorators.http import require_http_methods
+from django.http import HttpResponse
 from django.db.models import Sum
-import json
 
 from .models import (
-    Recipe, User, Tag, Composition, Ingredient, Follow, Favor, Cart
+    Recipe, User, Tag, Composition, Ingredient, Follow,
 )
 from .forms import RecipeForm
 
@@ -75,57 +72,6 @@ def favorites(request):
     )
 
 
-def api_ingredients(request):
-    return JsonResponse(
-        list(Ingredient.objects.filter(
-            title__startswith=request.GET.get('query')).values()
-        ),
-        safe=False
-    )
-
-
-@login_required
-@require_http_methods(['POST', 'DELETE'])
-@csrf_protect
-def api_subscription(request):
-    data = json.loads(request.body)
-    author = get_object_or_404(User, pk=data.get('id'))
-    if request.method == 'POST':
-        Follow.objects.create(user=request.user, author=author)
-    else:
-        follow = get_object_or_404(Follow, user=request.user, author=author)
-        follow.delete()
-    return JsonResponse({'success': True})
-
-
-@login_required
-@require_http_methods(['POST', 'DELETE'])
-@csrf_protect
-def api_favorites(request):
-    data = json.loads(request.body)
-    recipe = get_object_or_404(Recipe, pk=data.get('id'))
-    if request.method == 'POST':
-        Favor.objects.create(user=request.user, recipe=recipe)
-    else:
-        favor = get_object_or_404(Favor, user=request.user, recipe=recipe)
-        favor.delete()
-    return JsonResponse({'success': True})
-
-
-@login_required
-@require_http_methods(['POST', 'DELETE'])
-@csrf_protect
-def cart(request):
-    data = json.loads(request.body)
-    recipe = get_object_or_404(Recipe, pk=data.get('id'))
-    if request.method == 'POST':
-        Cart.objects.create(user=request.user, recipe=recipe)
-    else:
-        cart_item = get_object_or_404(Cart, user=request.user, recipe=recipe)
-        cart_item.delete()
-    return JsonResponse({'success': True})
-
-
 def post_ingredient_save(recipe, post_data):
     for key in filter(
         lambda x: x.startswith('nameIngredient'), post_data
@@ -148,7 +94,7 @@ def recipe_add(request):
         form.save_m2m()
         post_ingredient_save(recipe, dict(request.POST.items()))
         return redirect('index')
-    return render(request, 'recipeFormCreate.html', {'form': form})
+    return render(request, 'recipe_form_create.html', {'form': form})
 
 
 @login_required
@@ -168,7 +114,7 @@ def recipe_edit(request, recipe_id):
         return redirect('recipe', recipe_id=recipe_id)
     return render(
         request,
-        'recipeFormEdit.html',
+        'recipe_form_edit.html',
         {'form': form}
     )
 
@@ -197,7 +143,7 @@ def recipe_view(request, recipe_id):
     ) if request.user.is_authenticated else None
     return render(
         request,
-        'recipeView.html',
+        'recipe.html',
         {
             'recipe': recipe,
             'tags': tags,

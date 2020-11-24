@@ -8,7 +8,7 @@
     </div>
     <div class="card-list">
         {% for author in page %}
-            {% include 'userCard.html' with author=author %}
+            {% include 'user_card.html' with author=author %}
         {% endfor %}
     </div>
     {% if page.has_other_pages %}

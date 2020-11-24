@@ -1,10 +1,10 @@
 {% extends "base.html" %}
 {% block title %}Последние обновления на сайте{% endblock %}
 {% block content %}
-    {% include "contentHeader.html" with title="Рецепты" %}
+    {% include "content_header.html" with title="Рецепты" %}
     <div class="card-list">
         {% for recipe in page %}
-            {% include 'recipeCard.html' with recipe=recipe %}
+            {% include 'recipe_card.html' with recipe=recipe %}
         {% endfor %}
     </div>
     {% if page.has_other_pages %}
