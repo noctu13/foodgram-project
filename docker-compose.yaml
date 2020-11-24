@@ -1,0 +1,38 @@
+version: '3.8'
+
+volumes:
+  postgres_data:
+  static_data:
+  media_data:
+
+services:
+  db:
+    image: postgres:12.4
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    env_file:
+      - .env
+  web:
+    build: .
+    restart: always
+    volumes:
+      - static_data:/code/static
+      - media_data:/code/media
+    expose:
+      - 8000
+    depends_on:
+      - db
+    env_file:
+      - .env
+  nginx:
+    image: nginx:1.19.4
+    volumes:
+      - ./nginx/default.conf.template:/etc/nginx/templates/default.conf.template:ro
+      - static_data:/usr/share/nginx/html/static:ro
+      - media_data:/usr/share/nginx/html/media:ro
+    env_file:
+      - .env
+    ports:
+      - 80:80
+    depends_on:
+      - web
