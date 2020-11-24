@@ -11,6 +11,10 @@ class Tag(models.Model):
     def __str__(self):
         return self.name
 
+    class Meta:
+        verbose_name = 'тег'
+        verbose_name_plural = 'теги'
+
 
 class Ingredient(models.Model):
     title = models.CharField(max_length=20)
@@ -18,6 +22,10 @@ class Ingredient(models.Model):
 
     def __str__(self):
         return self.title
+
+    class Meta:
+        verbose_name = 'ингредиент'
+        verbose_name_plural = 'ингредиенты'
 
 
 class Recipe(models.Model):
@@ -45,6 +53,10 @@ class Recipe(models.Model):
     def __str__(self):
         return self.name
 
+    class Meta:
+        verbose_name = 'рецепт'
+        verbose_name_plural = 'рецепты'
+
 
 class Composition(models.Model):
     recipe = models.ForeignKey(
@@ -61,6 +73,8 @@ class Composition(models.Model):
 
     class Meta:
         unique_together = ['recipe', 'ingredient']
+        verbose_name = 'композицию'
+        verbose_name_plural = 'композиции'
 
     def __str__(self):
         return "{} contain {}".format(self.recipe.name, self.ingredient.title)
@@ -80,6 +94,8 @@ class Follow(models.Model):
 
     class Meta:
         unique_together = ['user', 'author']
+        verbose_name = 'подписку'
+        verbose_name_plural = 'подписки'
 
     def __str__(self):
         return "{} follow {}".format(self.user.username, self.author.username)
@@ -99,6 +115,8 @@ class Favor(models.Model):
 
     class Meta:
         unique_together = ['user', 'recipe']
+        verbose_name = 'избранное'
+        verbose_name_plural = 'избранное'
 
     def __str__(self):
         return "{} favor {}".format(self.user.username, self.recipe.name)
@@ -118,6 +136,8 @@ class Cart(models.Model):
 
     class Meta:
         unique_together = ['user', 'recipe']
+        verbose_name = 'покупку'
+        verbose_name_plural = 'список покупок'
 
     def __str__(self):
         return "{} add to cart {}".format(

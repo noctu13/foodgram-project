@@ -10,6 +10,12 @@ class RecipeForm(forms.ModelForm):
         required=True
     )
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['name'].widget.attrs.update({'class': 'form__input'})
+        self.fields['time'].widget.attrs.update({'class': 'form__input'})
+        self.fields['text'].widget.attrs.update({'class': 'form__textarea'})
+
     class Meta:
         model = Recipe
         fields = ['name', 'tags', 'text', "image", "time"]

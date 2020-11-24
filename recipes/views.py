@@ -12,8 +12,9 @@ from .forms import RecipeForm
 
 class PageBack:
     def __init__(self, request, _list):
+        self.limit = 6
         if _list:
-            self.paginator = Paginator(_list, 6)
+            self.paginator = Paginator(_list, self.limit)
             self.page = self.paginator.get_page(request.GET.get('page'))
         else:
             self.paginator = None
@@ -192,13 +193,15 @@ def profile_view(request, username):
 @login_required
 def subscriptions(request):
     author_list = User.objects.filter(following__user=request.user)
+    limit = 3
     page_back = PageBack(request, author_list)
     return render(
         request,
         'subscriptions.html',
         {
             'page': page_back.page,
-            'paginator': page_back.paginator
+            'paginator': page_back.paginator,
+            'limit': limit
         }
     )
 

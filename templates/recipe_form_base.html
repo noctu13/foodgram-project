@@ -9,7 +9,7 @@
         <div class="form__group">
             <label class="form__label">Название рецепта</label>
             <div class="form__field-group">
-                {{ form.name|addclass:"form__input" }}
+                {{ form.name }}
             </div>
         </div>
         <div class="form__group">
@@ -59,14 +59,14 @@
         <div class="form__group">
             <label class="form__label">Время приготовления</label>
             <div class="form__field-group form__field-group_time">
-                {{ form.time|addclass:"form__input" }}
+                {{ form.time }}
                 <label class="form__label">минут</label>
             </div>
         </div>
         <div class="form__group">
             <label class="form__label">Описание</label>
             <div class="form__field-group">
-                {{ form.text|addclass:"form__textarea" }}
+                {{ form.text }}
             </div>
         </div>
         <div class="form__group">
