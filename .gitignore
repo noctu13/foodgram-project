@@ -133,3 +133,6 @@ media/
 
 # VS Code
 .vscode/
+
+# OS files
+.directory

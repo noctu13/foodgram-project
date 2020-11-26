@@ -1,0 +1,9 @@
+.vscode/
+.directory
+.git/
+venv/
+media/
+static/
+sent_emails/
+.env
+db.sqlite3

@@ -11,7 +11,7 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data/
     env_file:
-      - .env
+      - ./foodgram/.env
   web:
     build: .
     restart: always
@@ -23,7 +23,7 @@ services:
     depends_on:
       - db
     env_file:
-      - .env
+      - ./foodgram/.env
   nginx:
     image: nginx:1.19.4
     volumes:
@@ -31,7 +31,7 @@ services:
       - static_data:/usr/share/nginx/html/static:ro
       - media_data:/usr/share/nginx/html/media:ro
     env_file:
-      - .env
+      - ./foodgram/.env
     ports:
       - 80:80
     depends_on:
