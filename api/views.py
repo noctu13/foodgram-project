@@ -8,7 +8,7 @@ from django.views.decorators.http import require_http_methods
 from recipes.models import Recipe, User, Ingredient, Follow, Favor, Cart
 
 
-def api_ingredients(request):
+def ingredients(request):
     return JsonResponse(
         list(Ingredient.objects.filter(
             title__startswith=request.GET.get('query')).values()
@@ -20,7 +20,7 @@ def api_ingredients(request):
 @login_required
 @require_http_methods(['POST', 'DELETE'])
 @csrf_protect
-def api_subscription(request):
+def subscription(request):
     data = json.loads(request.body)
     author = get_object_or_404(User, pk=data.get('id'))
     if request.method == 'POST':
@@ -34,7 +34,7 @@ def api_subscription(request):
 @login_required
 @require_http_methods(['POST', 'DELETE'])
 @csrf_protect
-def api_favorites(request):
+def favorites(request):
     data = json.loads(request.body)
     recipe = get_object_or_404(Recipe, pk=data.get('id'))
     if request.method == 'POST':
