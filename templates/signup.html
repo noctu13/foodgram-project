@@ -21,12 +21,11 @@
                     </label>
                     <div class="form__field-group">
                         {{ field|addclass:"form__input" }}
-                        {% if field.help_text %}
-                        <small id="{{ field.id_for_label }}-help" class="form__error">
+                        <small id="{{ field.id_for_label }}-help" class="form__input-info">
                             {{ field.help_text|safe }}
                         </small>
-                        {% endif %}
-                    </div>                
+                        <small class="form__error">{{ field.errors|escape }}</small>
+                    </div>
                 </div>
             {% endfor %}
             
