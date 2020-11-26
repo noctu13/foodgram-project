@@ -1,6 +1,7 @@
 # FOODGRAM-PROJECT
 
 Site for creating recipes. Implemented elements: filtering by tags, favorites list, subscription page, shopping page.
+Example site: [noctu.ml](https://noctu.ml)
 
 ## Getting Started
 
