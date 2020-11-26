@@ -59,6 +59,9 @@ def favorites(request):
         favorites__user=request.user).filter(
         tags__in=query).distinct().order_by('-pub_date')
     favor = recipe_list
+    cart = Recipe.objects.filter(
+        carts__user=request.user
+    ) if request.user.is_authenticated else None
     page_back = PageBack(request, recipe_list)
     return render(
         request,
@@ -68,7 +71,8 @@ def favorites(request):
             'paginator': page_back.paginator,
             'tags': tags,
             'query': query,
-            'favor': favor
+            'favor': favor,
+            'cart': cart
         }
     )
 
