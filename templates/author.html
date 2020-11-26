@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block title %}Рецепты{% endblock %}
 {% block content %}
-    {% include "content_header.html" with title=author %}
+    {% include "content_header.html" with title=author.first_name %}
     {% if user.is_authenticated and author != user %}
         <div class="author-subscribe" data-author='{{ author.pk }}'>
             <p style="padding: 0 0 2em 0;">

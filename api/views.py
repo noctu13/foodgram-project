@@ -24,7 +24,7 @@ def subscription(request):
     data = json.loads(request.body)
     author = get_object_or_404(User, pk=data.get('id'))
     if request.method == 'POST':
-        Follow.objects.create(user=request.user, author=author)
+        Follow.objects.get_or_create(user=request.user, author=author)
     else:
         follow = get_object_or_404(Follow, user=request.user, author=author)
         follow.delete()
@@ -38,7 +38,7 @@ def favorites(request):
     data = json.loads(request.body)
     recipe = get_object_or_404(Recipe, pk=data.get('id'))
     if request.method == 'POST':
-        Favor.objects.create(user=request.user, recipe=recipe)
+        Favor.objects.get_or_create(user=request.user, recipe=recipe)
     else:
         favor = get_object_or_404(Favor, user=request.user, recipe=recipe)
         favor.delete()
@@ -52,7 +52,7 @@ def cart(request):
     data = json.loads(request.body)
     recipe = get_object_or_404(Recipe, pk=data.get('id'))
     if request.method == 'POST':
-        Cart.objects.create(user=request.user, recipe=recipe)
+        Cart.objects.get_or_create(user=request.user, recipe=recipe)
     else:
         cart_item = get_object_or_404(Cart, user=request.user, recipe=recipe)
         cart_item.delete()
