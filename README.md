@@ -30,7 +30,7 @@ See details [Postgres: Environment Variables](https://hub.docker.com/_/postgres)
 
 Run in this directory:
 
-    docker-compose up
+    docker-compose up -d
 
 Install migrations and preload data by executing the "startup.sh" script:
 
