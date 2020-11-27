@@ -9,7 +9,7 @@ Download [Docker Desktop](https://www.docker.com/products/docker-desktop) for Ma
 
 ## Enviroment settings
 
-specify the following environment variables in /code/.env
+specify the following environment variables in foodgram/.env
 
     SECRET_KEY - set your own key
     POSTGRES_PASSWORD - set your own password
@@ -18,7 +18,7 @@ See details [Postgres: Environment Variables](https://hub.docker.com/_/postgres)
 
     DATABASE_URL=psql://postgres:POSTGRES_PASSWORD@db:5432/postgres
 
-See details [Django-environ](https://django-environ.readthedocs.io/en/latest/#installation)
+See details [Django-environ: Installation](https://django-environ.readthedocs.io/en/latest/#installation)
 
     NGINX_DOMAIN - input your domain
 
@@ -36,7 +36,7 @@ Install migrations and preload data by executing the "startup.sh" script:
 
     docker-compose exec web startup.sh
 
-The app will be running at [http://localhost:80](http://localhost:80)
+The app will be running at https://NGINX_DOMAIN
 
 Update nginx config every 34 hours to update ssl certificate:
 
