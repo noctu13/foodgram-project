@@ -12,24 +12,23 @@ Download [Docker Desktop](https://www.docker.com/products/docker-desktop) for Ma
 specify the following environment variables in /code/.env
 
     SECRET_KEY - set your own key
-
-    DB_ENGINE=django.db.backends.postgresql
-    DB_NAME=postgres
-    DB_HOST=db
-    DB_PORT=5432
-
-See details [Django settings: DATABASES](https://docs.djangoproject.com/en/3.1/ref/settings/#std:setting-DATABASES)
-
-    POSTGRES_USER=postgres
     POSTGRES_PASSWORD - set your own password
 
 See details [Postgres: Environment Variables](https://hub.docker.com/_/postgres)
 
-    NGINX_PORT=80
-    NGINX_IP=0.0.0.0
-    NGINX_HOST=http://web:8000
+    DATABASE_URL=psql://postgres:POSTGRES_PASSWORD@db:5432/postgres
 
-Run in this directory:
+See details [Django-environ](https://django-environ.readthedocs.io/en/latest/#installation)
+
+    NGINX_DOMAIN - input your domain
+
+Modify init-letsencrypt.sh file, insert your email and domain.
+
+Run in this directory to install Let’s Encrypt certificates:
+
+    sudo init-letsencrypt.sh
+
+Start your services:
 
     docker-compose up -d
 
@@ -38,6 +37,10 @@ Install migrations and preload data by executing the "startup.sh" script:
     docker-compose exec web startup.sh
 
 The app will be running at [http://localhost:80](http://localhost:80)
+
+Update nginx config every 34 hours to update ssl certificate:
+
+    docker-compose exec nginx nginx -s reload
 
 ## Other commands
 

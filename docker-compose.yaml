@@ -2,8 +2,6 @@ version: '3.8'
 
 volumes:
   postgres_data:
-  static_data:
-  media_data:
 
 services:
   db:
@@ -16,8 +14,8 @@ services:
     build: .
     restart: always
     volumes:
-      - static_data:/code/static
-      - media_data:/code/media
+      - ./static:/code/static
+      - ./media:/code/media
     expose:
       - 8000
     depends_on:
@@ -28,11 +26,20 @@ services:
     image: nginx:1.19.4
     volumes:
       - ./nginx/default.conf.template:/etc/nginx/templates/default.conf.template:ro
-      - static_data:/usr/share/nginx/html/static:ro
-      - media_data:/usr/share/nginx/html/media:ro
-    env_file:
-      - ./foodgram/.env
+      - ./static:/usr/share/nginx/html/static:ro
+      - ./media:/usr/share/nginx/html/media:ro
+      - ./certbot/conf:/etc/letsencrypt
+      - ./certbot/www:/var/www/certbot
     ports:
       - 80:80
+      - 443:443
     depends_on:
       - web
+    env_file:
+      - ./foodgram/.env
+  certbot:
+    image: certbot/certbot:v1.7.0
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 34h & wait $${!}; done;'"
+    volumes:
+      - ./certbot/conf:/etc/letsencrypt
+      - ./certbot/www:/var/www/certbot
